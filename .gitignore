@@ -1,0 +1,3 @@
+secrets.env
+config/dynamic/basicAuthUsers
+config/letsencrypt/acme.json

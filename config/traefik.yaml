@@ -1,0 +1,34 @@
+log:
+  level: "DEBUG"
+
+entryPoints:
+  web:
+    address: ":80"
+  websecure:
+    address: ":443"
+
+# Docker configuration backend
+providers:
+  docker:
+    defaultRule: "Host(`{{ trimPrefix `/` .Name }}.home.alhome.uk`)"
+    exposedByDefault: false
+  file:
+    watch: true
+    directory: /dynamic
+
+# API and dashboard configuration
+api:
+  insecure: true
+
+certificatesResolvers:
+  le:
+    acme:
+      email: "antonyoneill@protonmail.com"
+      storage: "/letsencrypt/acme.json"
+      dnsChallenge:
+        delayBeforeCheck: 0
+        provider: digitalocean
+        resolvers:
+          - "1.1.1.1:53"
+          - "8.8.8.8:53"
+

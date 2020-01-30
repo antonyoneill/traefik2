@@ -1,0 +1,64 @@
+--- 
+http: 
+  middlewares: 
+    auth: 
+      basicAuth: 
+        realm: Home
+    https_redirect: 
+      redirectScheme: 
+        permanent: true
+        scheme: https
+  routers: 
+    synology: 
+      rule: "Host(`nas.home.alhome.uk`)"
+      service: synology
+      tls: {}
+      entryPoints: 
+        - websecure
+      middlewares: 
+        - auth
+    http_catchall: 
+      rule: "HostRegexp(`{any:.+}`)"
+      service: noop
+      entryPoints: 
+        - web
+      middlewares: 
+        - https_redirect
+    https_catchall: 
+      rule: "HostRegexp(`{any:.+}`)"
+      service: noop
+      entryPoints: 
+        - websecure
+      middlewares: 
+        - auth
+    wildcard_cert: 
+      rule: "HostRegexp(`{any:.+}`)"
+      service: noop
+      tls: 
+        certResolver: le
+        domains: 
+          - 
+            main: home.alhome.uk
+            sans: 
+              - "*.home.alhome.uk"
+  services: 
+    noop: 
+      loadBalancer: 
+        servers: 
+          - 
+            url: "http://1.1.1.1:1"
+    synology: 
+      loadBalancer: 
+        servers: 
+          - 
+            url: "http://192.168.0.25:5000"
+
+  middlewares:
+    https_redirect:
+      redirectScheme:
+        scheme: https
+        permanent: true
+    auth:
+      realm: "Home"
+      basicAuth:
+        usersFile: /dynamic/basicAuthUsers
