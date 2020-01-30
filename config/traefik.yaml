@@ -16,10 +16,6 @@ providers:
     watch: true
     directory: /dynamic
 
-# API and dashboard configuration
-api:
-  insecure: true
-
 certificatesResolvers:
   le:
     acme:

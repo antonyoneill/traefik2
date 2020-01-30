@@ -9,6 +9,14 @@ http:
         permanent: true
         scheme: https
   routers: 
+    api:
+      rule: "Host(`traefik.home.alhome.uk`)"
+      service: api@internal
+      tls: {}
+      entryPoints:
+        - websecure
+      middlewares:
+        - auth
     synology: 
       rule: "Host(`nas.home.alhome.uk`)"
       service: synology
