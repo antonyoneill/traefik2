@@ -1,30 +1,6 @@
 --- 
 http: 
-  middlewares: 
-    auth: 
-      basicAuth: 
-        realm: Home
-    https_redirect: 
-      redirectScheme: 
-        permanent: true
-        scheme: https
   routers: 
-    api:
-      rule: "Host(`traefik.home.alhome.uk`)"
-      service: api@internal
-      tls: {}
-      entryPoints:
-        - websecure
-      middlewares:
-        - auth
-    synology: 
-      rule: "Host(`nas.home.alhome.uk`)"
-      service: synology
-      tls: {}
-      entryPoints: 
-        - websecure
-      middlewares: 
-        - auth
     http_catchall: 
       rule: "HostRegexp(`{any:.+}`)"
       service: noop
@@ -34,22 +10,34 @@ http:
         - https_redirect
     https_catchall: 
       rule: "HostRegexp(`{any:.+}`)"
-      tls: {}
       service: noop
-      entryPoints: 
-        - websecure
-      middlewares: 
-        - auth
-    wildcard_cert: 
-      rule: "HostRegexp(`{any:.+}`)"
-      service: noop
-      tls: 
+      tls: &tls
         certResolver: le
         domains: 
           - 
             main: home.alhome.uk
             sans: 
               - "*.home.alhome.uk"
+      entryPoints: 
+        - websecure
+      middlewares:
+        - auth
+    api:
+      rule: "Host(`t.home.alhome.uk`)"
+      service: api@internal
+      tls: *tls
+      entryPoints:
+        - websecure
+      middlewares:
+        - auth
+    synology: 
+      rule: "Host(`nas.home.alhome.uk`)"
+      service: synology
+      tls: *tls
+      entryPoints: 
+        - websecure
+      middlewares: 
+        - auth
   services: 
     noop: 
       loadBalancer: 
@@ -60,14 +48,13 @@ http:
       loadBalancer: 
         servers: 
           - 
-            url: "http://192.168.0.25:5000"
-
+            url: "http://192.168.0.39:5000"
   middlewares:
     https_redirect:
       redirectScheme:
         scheme: https
         permanent: true
     auth:
-      realm: "Home"
       basicAuth:
         usersFile: /dynamic/basicAuthUsers
+        realm: "Home"
