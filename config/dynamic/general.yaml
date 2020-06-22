@@ -30,6 +30,12 @@ http:
         - websecure
       middlewares:
         - auth
+    hass: 
+      rule: "Host(`hass.home.alhome.uk`)"
+      service: hass
+      tls: *tls
+      entryPoints: 
+        - websecure
     synology: 
       rule: "Host(`nas.home.alhome.uk`)"
       service: synology
