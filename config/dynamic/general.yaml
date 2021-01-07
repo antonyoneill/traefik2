@@ -50,11 +50,16 @@ http:
         servers: 
           - 
             url: "https://alhome.uk"
+    hass: 
+      loadBalancer: 
+        servers: 
+          - 
+            url: "http://192.168.0.20:8123"
     synology: 
       loadBalancer: 
         servers: 
           - 
-            url: "http://192.168.0.39:5000"
+            url: "http://192.168.0.25:5000"
   middlewares:
     https_redirect:
       redirectScheme:
